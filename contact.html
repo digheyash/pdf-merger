@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About &amp; Contact Us - PDFMerge & Number</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    .legal-page-container {
+      max-width: 860px;
+      margin: 40px auto 100px auto;
+      padding: 36px 32px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--card-shadow);
+      line-height: 1.7;
+    }
+    .legal-page-container h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; color: var(--text-main); }
+    .legal-date { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 28px; }
+    .legal-section { margin-bottom: 24px; }
+    .legal-section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: var(--text-main); }
+    .legal-section p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 12px; }
+    .contact-card {
+      background-color: var(--bg-surface-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      margin-top: 14px;
+    }
+    .contact-card p { margin-bottom: 8px; font-size: 0.95rem; }
+    .contact-card strong { color: var(--text-main); }
+    .nav-back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--primary); font-weight: 600; text-decoration: none; margin-bottom: 20px; font-size: 0.9rem; }
+  </style>
+</head>
+<body class="theme-light">
+  <header class="app-header">
+    <div class="header-container">
+      <a href="index.html" class="brand" style="text-decoration:none; color:inherit;">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+        </div>
+        <div class="brand-text">
+          <h1>PDFMerge <span class="accent-text">&amp; Number</span></h1>
+        </div>
+      </a>
+      <a href="index.html" class="btn btn-secondary btn-sm">&larr; Back to Tool</a>
+    </div>
+  </header>
+
+  <main class="legal-page-container">
+    <a href="index.html" class="nav-back-link">&larr; Back to PDF Merger</a>
+    <h1>About &amp; Contact Us</h1>
+    <div class="legal-date">PDFMerge &amp; Number - Privacy-First Web Utilities</div>
+
+    <div class="legal-section">
+      <h2>About The Tool</h2>
+      <p>PDFMerge &amp; Number was built to solve a major problem with existing online PDF tools: <strong>confidentiality</strong>. Most online PDF platforms require users to upload sensitive contracts, financial statements, and personal records to third-party cloud servers.</p>
+      <p>Our tool runs 100% in your local web browser memory using client-side JavaScript. Your files never leave your computer, ensuring total compliance with privacy laws and enterprise data security guidelines.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>Get In Touch</h2>
+      <p>Have questions, feature requests, or feedback? We'd love to hear from you.</p>
+      <div class="contact-card">
+        <p><strong>Website:</strong> PDFMerge &amp; Number</p>
+        <p><strong>Support &amp; Inquiries:</strong> <a href="mailto:support@example.com">support@example.com</a></p>
+        <p><strong>Response Time:</strong> Typically within 24-48 business hours.</p>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Merger & Page Numberer - 100% Free & Private</title>
+  <meta name="description" content="Merge multiple PDF files into one and add customizable page numbers (Page X of Y, position, fonts, margins) entirely in your browser with zero server uploads." />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Google Fonts for modern clean typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Local Offline-First PDF-Lib -->
+  <script src="pdf-lib.min.js"></script>
+  <script>
+    // Fallback if local file not found
+    if (typeof PDFLib === 'undefined') {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.9/dist/pdf-lib.min.js"><\/script>');
+    }
+  </script>
+
+  <!-- Local Offline-First PDF.js for Thumbnail Previews -->
+  <script src="pdf.min.js"></script>
+  <script>
+    if (typeof pdfjsLib !== 'undefined') {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdf.worker.min.js';
+    }
+  </script>
+
+  <!-- Google AdSense Integration (Replace ca-pub-XXXXXXXXXXXXXXXX with your approved AdSense ID) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4548137299664448"
+     crossorigin="anonymous"></script>
+</head>
+<body class="theme-light">
+  <!-- Top Navigation Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>PDFMerge <span class="accent-text">&amp; Number</span></h1>
+          <span class="badge badge-pro">Free &amp; Offline-Ready</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="privacy-pill" title="Processing happens strictly on your machine. No server upload.">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span>100% Private (In-Browser)</span>
+        </div>
+        <button id="themeToggleBtn" class="icon-btn" aria-label="Toggle dark/light mode" title="Toggle theme">
+          <svg id="moonIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg id="sunIcon" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Library Status Banner (Shows only if pdf-lib cannot be found) -->
+  <div id="libStatusBanner" class="alert-banner hidden">
+    <div class="banner-content">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      <span>PDF engine (<code>pdf-lib.min.js</code>) is loading. Please keep <code>pdf-lib.min.js</code> in the same folder as <code>index.html</code>.</span>
+    </div>
+  </div>
+
+  <!-- Prominent Privacy Trust Hero Banner -->
+  <aside class="privacy-hero-banner">
+    <div class="privacy-hero-container">
+      <div class="privacy-hero-main">
+        <div class="privacy-hero-badge">
+          <span class="pulse-indicator"></span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <span>100% In-Browser Privacy Guarantee</span>
+        </div>
+        <p class="privacy-hero-desc">
+          <strong>Your files never leave your device.</strong> Unlike cloud PDF websites, our engine processes documents entirely inside your browser's local memory. Safe for confidential contracts, medical records, and tax forms.
+        </p>
+      </div>
+      <div class="privacy-hero-actions">
+        <button type="button" id="openPrivacyModalBtn" class="btn btn-ghost btn-privacy-learn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <span>How It's 100% Private</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- High-Profit Ad Placement 1: Top Responsive Banner (728x90 / Auto) -->
+  <div class="ad-outer-wrapper">
+    <div class="ad-container ad-top-banner">
+      <span class="ad-label">ADVERTISEMENT</span>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4548137299664448"
+           data-ad-slot="4198402244"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      <!-- Visual Placeholder shown when ads are pending approval -->
+      <div class="ad-placeholder-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+        <span>Top Responsive Ad Banner (Auto / 728x90) &bull; Paste your AdSense ID to activate</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="main-layout">
+    <!-- Left Column: PDF File Manager -->
+    <section class="panel files-panel">
+      <div class="panel-header">
+        <div class="panel-title-group">
+          <h2>1. Select &amp; Arrange PDFs</h2>
+          <p class="panel-subtitle">Upload multiple PDF files. Drag or use arrows to change the merge order.</p>
+        </div>
+        <div id="filesSummaryBadge" class="summary-badge hidden">
+          <span id="summaryCount">0 files</span> &bull; <span id="summaryPages">0 pages</span>
+        </div>
+      </div>
+
+      <!-- Dropzone -->
+      <div id="dropzone" class="dropzone" tabindex="0">
+        <input type="file" id="fileInput" multiple accept=".pdf,application/pdf" class="file-input-hidden" />
+        <div class="dropzone-content">
+          <div class="upload-icon-wrapper">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </div>
+          <h3>Drag &amp; drop PDF files here</h3>
+          <p class="dropzone-hint">or <button type="button" class="link-btn" id="browseBtn">browse files</button> from your computer</p>
+          <div class="dropzone-tags">
+            <span class="tag tag-privacy">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              Zero Server Uploads
+            </span>
+            <span class="tag">Multiple PDFs</span>
+            <span class="tag">Any file size</span>
+            <span class="tag">Works Offline</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Files Toolbar (hidden when empty) -->
+      <div id="filesToolbar" class="files-toolbar hidden">
+        <div class="toolbar-left">
+          <button type="button" id="addMoreBtn" class="btn btn-secondary btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Add More PDFs
+          </button>
+          <button type="button" id="sortAzBtn" class="btn btn-ghost btn-sm" title="Sort by file name">
+            Sort A-Z
+          </button>
+          <button type="button" id="reverseBtn" class="btn btn-ghost btn-sm" title="Reverse order">
+            Reverse
+          </button>
+        </div>
+        <div class="toolbar-right">
+          <button type="button" id="clearAllBtn" class="btn btn-ghost btn-danger-ghost btn-sm">
+            Clear All
+          </button>
+        </div>
+      </div>
+
+      <!-- File List -->
+      <div id="fileList" class="file-list"></div>
+
+      <!-- Empty State Illustration -->
+      <div id="emptyState" class="empty-state">
+        <div class="empty-art">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            <line x1="9" y1="7" x2="15" y2="7"></line>
+            <line x1="9" y1="11" x2="13" y2="11"></line>
+          </svg>
+        </div>
+        <p>No PDF files added yet. Drop files above to get started.</p>
+      </div>
+    </section>
+
+    <!-- Right Column: Page Numbering & Formatting Settings -->
+    <section class="panel settings-panel">
+      <div class="panel-header">
+        <div class="panel-title-group">
+          <h2>2. Page Numbering &amp; Style</h2>
+          <p class="panel-subtitle">Customize numbering format, placement, font, and offsets.</p>
+        </div>
+        <label class="switch-control" title="Enable or disable page numbering">
+          <input type="checkbox" id="enableNumberingToggle" checked />
+          <span class="switch-slider"></span>
+        </label>
+      </div>
+
+      <div id="settingsContainer" class="settings-content">
+        <!-- Numbering Position Selector -->
+        <div class="setting-group">
+          <label class="setting-label">Position on Page</label>
+          <div class="position-grid">
+            <button type="button" class="pos-btn" data-pos="top-left" title="Top Left">
+              <span class="pos-dot tl"></span>Top Left
+            </button>
+            <button type="button" class="pos-btn" data-pos="top-center" title="Top Center">
+              <span class="pos-dot tc"></span>Top Center
+            </button>
+            <button type="button" class="pos-btn" data-pos="top-right" title="Top Right">
+              <span class="pos-dot tr"></span>Top Right
+            </button>
+            <button type="button" class="pos-btn" data-pos="bottom-left" title="Bottom Left">
+              <span class="pos-dot bl"></span>Bottom Left
+            </button>
+            <button type="button" class="pos-btn active" data-pos="bottom-center" title="Bottom Center (Standard)">
+              <span class="pos-dot bc"></span>Bottom Center
+            </button>
+            <button type="button" class="pos-btn" data-pos="bottom-right" title="Bottom Right">
+              <span class="pos-dot br"></span>Bottom Right
+            </button>
+          </div>
+        </div>
+
+        <!-- Number Format -->
+        <div class="setting-group">
+          <div class="label-row">
+            <label class="setting-label" for="formatSelect">Number Format</label>
+            <span class="help-text">Live: <strong id="formatSampleText">Page 1 of 12</strong></span>
+          </div>
+          <select id="formatSelect" class="form-select">
+            <option value="Page {n} of {total}" selected>Page {n} of {total}  (e.g. Page 1 of 12)</option>
+            <option value="{n} of {total}">{n} of {total}  (e.g. 1 of 12)</option>
+            <option value="{n} / {total}">{n} / {total}  (e.g. 1 / 12)</option>
+            <option value="{n}">{n}  (e.g. 1, 2, 3...)</option>
+            <option value="Page {n}">Page {n}  (e.g. Page 1)</option>
+            <option value="- {n} -">- {n} -  (e.g. - 1 -)</option>
+            <option value="custom">Custom Format...</option>
+          </select>
+          <div id="customFormatGroup" class="custom-format-row hidden">
+            <input type="text" id="customFormatInput" class="form-input" placeholder="e.g. Doc {n} / {total}" value="Page {n} of {total}" />
+            <span class="input-hint">Use <code>{n}</code> for page number, <code>{total}</code> for total pages.</span>
+          </div>
+        </div>
+
+        <!-- Starting Number and Skip Pages Row -->
+        <div class="setting-row-2col">
+          <div class="setting-group">
+            <label class="setting-label" for="startNumberInput">Start Numbering At</label>
+            <input type="number" id="startNumberInput" class="form-input" min="1" max="9999" value="1" />
+          </div>
+          <div class="setting-group">
+            <label class="setting-label" for="skipPagesInput">Skip First Page(s)</label>
+            <div class="input-with-toggle">
+              <input type="number" id="skipPagesInput" class="form-input" min="0" max="50" value="0" />
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="includeSkippedInTotalCheck" checked />
+            <span>Include skipped pages in total count <em>(e.g. Page 2 of 10)</em></span>
+          </label>
+        </div>
+
+        <!-- Typography & Styling Accordion / Section -->
+        <div class="setting-group divider-top">
+          <label class="setting-label">Font &amp; Appearance</label>
+          <div class="setting-row-3col">
+            <div>
+              <label class="sub-label" for="fontFamilySelect">Font Family</label>
+              <select id="fontFamilySelect" class="form-select form-select-sm">
+                <option value="Helvetica" selected>Helvetica (Standard)</option>
+                <option value="TimesRoman">Times New Roman</option>
+                <option value="Courier">Courier Mono</option>
+              </select>
+            </div>
+            <div>
+              <label class="sub-label" for="fontSizeInput">Font Size (<span id="fontSizeDisplay">10</span> pt)</label>
+              <input type="range" id="fontSizeInput" min="8" max="22" value="10" class="form-slider" />
+            </div>
+            <div>
+              <label class="sub-label">Color</label>
+              <div class="color-picker-wrap">
+                <input type="color" id="fontColorInput" value="#1f2937" class="color-input" />
+                <span id="colorHexText" class="color-hex">#1f2937</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Margin / Distance from edge -->
+        <div class="setting-group">
+          <div class="label-row">
+            <label class="setting-label" for="marginInput">Margin from Edge</label>
+            <span class="help-text"><span id="marginDisplay">28</span> pt (~10 mm)</span>
+          </div>
+          <input type="range" id="marginInput" min="12" max="72" value="28" class="form-slider" />
+        </div>
+
+        <!-- Live Visual Page Preview Box -->
+        <div class="preview-card">
+          <div class="preview-header">
+            <span class="preview-title">Live Layout Preview</span>
+            <span class="preview-status">Visual Simulation</span>
+          </div>
+          <div class="preview-sheet-wrapper">
+            <div id="simulatedPage" class="simulated-page">
+              <div class="sim-line sim-title"></div>
+              <div class="sim-line"></div>
+              <div class="sim-line"></div>
+              <div class="sim-line sim-short"></div>
+              <div class="sim-line"></div>
+              <div class="sim-line sim-short"></div>
+              <!-- Floating simulated page number indicator -->
+              <div id="simPageNumber" class="sim-page-number">Page 1 of 12</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- High-Profit Ad Placement 3: Sidebar / In-Settings Banner (300x250 / Auto) -->
+        <div class="ad-container ad-sidebar-banner">
+          <span class="ad-label">SPONSORED</span>
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-4548137299664448"
+               data-ad-slot="9067585546"
+               data-ad-format="rectangle"
+               data-full-width-responsive="true"></ins>
+          <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+          <div class="ad-placeholder-box ad-placeholder-small">
+            <span>Sidebar Ad Unit (300x250)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Privacy Comparison & Trust Section -->
+  <section class="privacy-trust-section">
+    <div class="privacy-trust-container">
+      <div class="privacy-trust-header">
+        <div class="trust-badge-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+        </div>
+        <div>
+          <h3>Why Local Processing Matters for Your Privacy</h3>
+          <p>See the technical difference between our client-side tool and traditional cloud PDF websites.</p>
+        </div>
+      </div>
+
+      <div class="privacy-comparison-grid">
+        <!-- Cloud Tools Column -->
+        <div class="comparison-card cloud-tool-card">
+          <div class="comp-card-header">
+            <span class="comp-badge badge-cloud">Cloud PDF Tools (e.g. iLovePDF, Smallpdf)</span>
+            <h4>Remote Cloud Processing</h4>
+          </div>
+          <ul class="comp-list">
+            <li class="comp-item danger">
+              <span class="comp-icon">&times;</span>
+              <div><strong>Uploaded over the internet</strong> to third-party cloud servers</div>
+            </li>
+            <li class="comp-item danger">
+              <span class="comp-icon">&times;</span>
+              <div><strong>Stored on remote hard drives</strong> for hours or days</div>
+            </li>
+            <li class="comp-item danger">
+              <span class="comp-icon">&times;</span>
+              <div><strong>High privacy risk</strong> for contracts, legal filings, tax returns &amp; medical records</div>
+            </li>
+            <li class="comp-item danger">
+              <span class="comp-icon">&times;</span>
+              <div><strong>Strict limits:</strong> Daily caps, file size limits, paywalls, and ads</div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- This Local Tool Column -->
+        <div class="comparison-card local-tool-card">
+          <div class="comp-card-header">
+            <span class="comp-badge badge-local">PDFMerge &amp; Number (This App)</span>
+            <h4>100% In-Browser Execution</h4>
+          </div>
+          <ul class="comp-list">
+            <li class="comp-item success">
+              <span class="comp-icon">&#10003;</span>
+              <div><strong>0 bytes sent over the network:</strong> Processing runs strictly in your browser's RAM</div>
+            </li>
+            <li class="comp-item success">
+              <span class="comp-icon">&#10003;</span>
+              <div><strong>Zero server storage:</strong> Data vanishes completely the instant you close the tab</div>
+            </li>
+            <li class="comp-item success">
+              <span class="comp-icon">&#10003;</span>
+              <div><strong>100% Safe for confidential files:</strong> HIPAA, GDPR &amp; legal confidentiality compliant</div>
+            </li>
+            <li class="comp-item success">
+              <span class="comp-icon">&#10003;</span>
+              <div><strong>Works 100% offline:</strong> Turn off your Wi-Fi or go into Airplane mode—it still works!</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Mandatory AdSense Legal & Policy Navigation -->
+      <div class="site-footer-nav">
+        <span>&copy; 2026 PDFMerge &amp; Number &bull; 100% In-Browser Privacy</span>
+        <div class="legal-nav-links">
+          <a href="privacy.html" class="legal-link">Privacy Policy</a>
+          <span class="link-dot">&bull;</span>
+          <a href="terms.html" class="legal-link">Terms of Service</a>
+          <span class="link-dot">&bull;</span>
+          <a href="contact.html" class="legal-link">About &amp; Contact</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sticky Bottom Execution Bar -->
+  <footer class="action-footer">
+    <div class="footer-container">
+      <div class="footer-status">
+        <div id="footerStatusText" class="footer-text">
+          <span class="status-indicator"></span>
+          <span>Upload PDF files on the left to begin</span>
+        </div>
+        <div class="footer-privacy-tag">
+          <span class="privacy-dot-green"></span>
+          <span>In-Memory Sandbox &bull; Network Uploads: 0 KB</span>
+        </div>
+      </div>
+      <div class="footer-buttons">
+        <button type="button" id="generateTestFilesBtn" class="btn btn-ghost btn-sm" title="Add 2 sample PDFs with 5 total pages to test quickly">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+          Load Sample PDFs
+        </button>
+        <button type="button" id="mergeBtn" class="btn btn-primary btn-lg" disabled>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          </svg>
+          <span>Merge &amp; Add Page Numbers</span>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Processing Modal -->
+  <div id="progressModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="processing-spinner-wrap">
+        <div class="spinner"></div>
+      </div>
+      <h3 id="progressTitle">Merging PDFs...</h3>
+      <p id="progressMessage" class="modal-subtext">Reading pages and assembling document...</p>
+      <div class="progress-bar-container">
+        <div id="progressBar" class="progress-bar-fill" style="width: 15%"></div>
+      </div>
+      <div class="progress-stats">
+        <span id="progressPercent">15%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success / Download Modal -->
+  <div id="successModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card modal-success">
+      <div class="success-icon-wrap">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <h3>Your PDF is Ready!</h3>
+      <p class="modal-subtext">All pages have been merged and numbered successfully.</p>
+
+      <div class="result-details-box">
+        <div class="detail-item">
+          <span class="detail-label">Total Pages</span>
+          <span id="resultPageCount" class="detail-value">0</span>
+        </div>
+        <div class="detail-divider"></div>
+        <div class="detail-item">
+          <span class="detail-label">File Size</span>
+          <span id="resultFileSize" class="detail-value">0 KB</span>
+        </div>
+        <div class="detail-divider"></div>
+        <div class="detail-item">
+          <span class="detail-label">Status</span>
+          <span class="detail-value text-success">✓ 100% Client-Side</span>
+        </div>
+      </div>
+
+      <!-- In-Modal Privacy Seal -->
+      <div class="success-privacy-seal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+        <span><strong>100% Confidential:</strong> Merged in your browser memory. No server upload occurred.</span>
+      </div>
+
+      <div class="filename-input-group">
+        <label for="outputFileNameInput">Output File Name</label>
+        <div class="input-with-extension">
+          <input type="text" id="outputFileNameInput" value="merged-numbered" class="form-input" />
+          <span class="extension-badge">.pdf</span>
+        </div>
+      </div>
+
+      <!-- High-Profit Ad Placement 2: High-CTR Download Modal Ad (Highest RPM) -->
+      <div class="ad-container ad-modal-banner">
+        <span class="ad-label">ADVERTISEMENT</span>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-4548137299664448"
+             data-ad-slot="9179266189"
+             data-ad-format="rectangle"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <div class="ad-placeholder-box ad-placeholder-modal">
+          <span>High-CTR Result Ad (300x250)</span>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" id="downloadMergedBtn" class="btn btn-primary btn-lg btn-block">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Download Numbered PDF
+        </button>
+        <div class="modal-actions-secondary">
+          <button type="button" id="previewMergedBtn" class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            Preview in Tab
+          </button>
+          <button type="button" id="closeSuccessBtn" class="btn btn-ghost">
+            Close &amp; Edit
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Privacy Guarantee Modal -->
+  <div id="privacyModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card modal-privacy-explainer">
+      <div class="modal-privacy-icon-wrap">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+      </div>
+      <h3>Your Privacy is Built-In, Not a Promise</h3>
+      <p class="modal-subtext">Here is the technical architecture behind our zero-server privacy model:</p>
+
+      <div class="privacy-points-list">
+        <div class="privacy-point-card">
+          <div class="point-number">1</div>
+          <div class="point-content">
+            <h4>Zero Network Transmission</h4>
+            <p>Your PDF files are parsed directly into your browser's local memory via HTML5 <code>FileReader</code>. Not a single byte is uploaded over the internet.</p>
+          </div>
+        </div>
+        <div class="privacy-point-card">
+          <div class="point-number">2</div>
+          <div class="point-content">
+            <h4>In-Memory JavaScript Execution</h4>
+            <p>Merging, reordering, and page numbering run 100% inside your browser using the local <code>pdf-lib</code> engine. Zero server computation.</p>
+          </div>
+        </div>
+        <div class="privacy-point-card">
+          <div class="point-number">3</div>
+          <div class="point-content">
+            <h4>Automatic Memory Eradication</h4>
+            <p>We do not have a database. We store zero documents. The second you refresh or close this tab, your data vanishes completely.</p>
+          </div>
+        </div>
+        <div class="privacy-point-card">
+          <div class="point-number">4</div>
+          <div class="point-content">
+            <h4>Airplane Mode / Offline Test</h4>
+            <p>Want proof? Turn off your Wi-Fi right now. This entire website will continue to merge and number your PDFs without hesitation!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="margin-top: 24px;">
+        <button type="button" id="closePrivacyModalBtn" class="btn btn-primary btn-block btn-lg">
+          Got It, Back to Merging
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
