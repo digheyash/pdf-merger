@@ -6,6 +6,11 @@
 (() => {
   'use strict';
 
+  // Safeguard: Exit immediately if evaluated in non-browser environment
+  if (typeof window === 'undefined') {
+    return;
+  }
+
   // =========================================================================
   // State Management
   // =========================================================================
@@ -15,7 +20,7 @@
     mergedBlobUrl: null,
     mergedBytes: null,
     mergedTotalPages: 0,
-    theme: localStorage.getItem('pdf_merger_theme') || 'light',
+    theme: (typeof localStorage !== 'undefined' ? localStorage.getItem('pdf_merger_theme') : null) || 'light',
     settings: {
       enableNumbering: true,
       position: 'bottom-center',
@@ -121,7 +126,9 @@
   // =========================================================================
   function applyTheme(theme) {
     state.theme = theme;
-    localStorage.setItem('pdf_merger_theme', theme);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('pdf_merger_theme', theme);
+    }
     if (theme === 'dark') {
       document.body.classList.remove('theme-light');
       document.body.classList.add('theme-dark');
@@ -162,7 +169,7 @@
 
     return new Promise((resolve) => {
       const script = document.createElement('script');
-      script.src = 'pdf-lib.min.js';
+      script.src = 'js/pdf-lib.min.js';
       script.onload = () => {
         if (typeof PDFLib !== 'undefined') {
           if (el.libStatusBanner) el.libStatusBanner.classList.add('hidden');
