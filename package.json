@@ -2,9 +2,8 @@
   "name": "pdf-merger-web",
   "version": "1.0.0",
   "description": "Client-side PDF merger and page numberer web application",
-  "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node local-server.js"
   },
   "keywords": [
     "pdf",
@@ -13,9 +12,5 @@
     "pdf-lib"
   ],
   "author": "",
-  "license": "MIT",
-  "dependencies": {
-    "pdf-lib": "^1.17.1",
-    "pdfjs-dist": "^3.11.174"
-  }
+  "license": "MIT"
 }
